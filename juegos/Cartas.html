@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Memoria Matemático</title>
+    <style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+
+body { background-color: #011C26; min-height: 100vh; color: #ffffff; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+
+header { text-align: center; margin-bottom: 30px; }
+
+h1 { font-size: 3.2rem; color: #91E3F2; letter-spacing: 2px; margin-bottom: 15px; text-shadow: 2px 2px 0px #0F222E;}
+
+.btn-volver { display: inline-block; margin-top: 10px; padding: 14px 35px; background-color: #005a7a; color: #ffffff; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 1.2rem; border: 3px solid #ffffff; box-shadow: 0 6px 0 #0F222E; cursor: pointer; transition: all 0.1s; }
+.btn-volver:active { transform: translateY(6px); box-shadow: 0 0 0 #0F222E; }
+.btn-volver:hover { background-color: #91E3F2; color: #011C26; }
+
+#pantalla-niveles { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 750px; background: #0F222E; padding: 40px; border-radius: 30px; border: 4px solid #005a7a; }
+#pantalla-niveles h2 { color: #ffffff; font-size: 2rem; margin-bottom: 30px; }
+
+.cuadricula-niveles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 25px; width: 100%; }
+
+.btn-nivel { padding: 25px 0; font-size: 2rem; font-weight: bold; background-color: #005a7a; color: #ffffff; border: 3px solid #ffffff; border-radius: 20px; cursor: pointer; box-shadow: 0 8px 0 #011C26; transition: all 0.1s; }
+.btn-nivel:hover { background-color: #91E3F2; color: #011C26; }
+.btn-nivel:active { transform: translateY(8px); box-shadow: 0 0 0 #011C26; }
+
+#pantalla-juego { display: none; flex-direction: column; align-items: center; width: 100%; }
+
+.info-nivel { font-size: 2rem; margin-bottom: 20px; font-weight: bold; color: #91E3F2; }
+
+.tablero { display: grid; gap: 12px; max-width: 800px; margin: 0 auto; perspective: 1000px; background: #0F222E; padding: 25px; border-radius: 25px; border: 2px solid #005a7a;}
+
+.carta { width: 75px; height: 95px; position: relative; transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275); cursor: pointer; }
+.carta.volteada { transform: rotateY(180deg); }
+
+.cara { width: 100%; height: 100%; position: absolute; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border-radius: 15px; }
+.carta-frente { background-color: #005a7a; color: white; border: 3px solid #ffffff; font-size: 3rem; font-weight: bold; }
+.carta-dorso { background-color: #ffffff; color: #011C26; transform: rotateY(180deg); border: 4px solid #005a7a; font-weight: bold; }
+
+#mensaje-victoria { display: none; text-align: center; margin-top: 20px; background: #0F222E; padding: 25px 40px; border-radius: 25px; border: 4px solid #91E3F2; animation: saltar 0.5s ease; }
+#mensaje-victoria h2 { color: #91E3F2; margin-bottom: 15px; font-size: 2.5rem; }
+
+@keyframes saltar { 0% { transform: scale(0.5); opacity: 0; } 80% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>¡Súper Memoria!</h1>
+        <a href="/index.html" class="btn-volver" id="btn-menu-principal" aria-label="Volver al menú principal">🏠 Volver al Menú</a>
+    </header>
+
+    <div id="pantalla-niveles">
+        <h2>👉 Elige un Nivel 👈</h2>
+        <div class="cuadricula-niveles" id="contenedor-niveles" role="group" aria-label="Selección de niveles"></div>
+    </div>
+
+    <div id="pantalla-juego">
+        <div class="info-nivel" id="info-nivel" aria-live="polite">Nivel 1</div>
+        <button class="btn-volver" onclick="volverSelectorNiveles()" style="margin-bottom: 20px;" aria-label="Salir del juego actual">❌ Salir del juego</button>
+        
+        <div class="tablero" id="tablero" role="grid" aria-label="Tablero de cartas emparejables"></div>
+
+        <div id="mensaje-victoria" aria-live="assertive">
+            <h2>¡Genial! 🌟</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 15px; color: #ffffff;">¡Tienes una mente brillante para las matemáticas!</p>
+            <button class="btn-volver" onclick="volverSelectorNiveles()">Volver a niveles</button>
+            <button class="btn-volver" id="btn-siguiente-nivel">¡Siguiente! 🚀</button>
+        </div>
+    </div>
+
+    <script>
+        const bancoSimbolos = ['π', '∞', '∑', '√', '∫', 'Δ', '%', 'θ', 'Ω', '≠', '+', '-', '×', '÷', '=', 'α', 'β', 'γ'];
+        const configuracionNiveles = [
+            { nivel: 1, parejas: 2, columnas: 2 }, { nivel: 2, parejas: 3, columnas: 3 }, { nivel: 3, parejas: 4, columnas: 4 },
+            { nivel: 4, parejas: 6, columnas: 4 }, { nivel: 5, parejas: 8, columnas: 4 }, { nivel: 6, parejas: 10, columnas: 5 },
+            { nivel: 7, parejas: 12, columnas: 6 }, { nivel: 8, parejas: 14, columnas: 7 }, { nivel: 9, parejas: 16, columnas: 8 },
+            { nivel: 10, parejas: 18, columnas: 6 }
+        ];
+
+        let nivelActual = 1; let primeraCarta = null; let segundaCarta = null; let bloqueoTablero = false; let parejasEncontradas = 0; let totalParejasActual = 0;
+
+        const pantallaNiveles = document.getElementById('pantalla-niveles');
+        const pantallaJuego = document.getElementById('pantalla-juego');
+        const contenedorNiveles = document.getElementById('contenedor-niveles');
+        const tablero = document.getElementById('tablero');
+        const infoNivel = document.getElementById('info-nivel');
+        const mensajeVictoria = document.getElementById('mensaje-victoria');
+        const btnSiguienteNivel = document.getElementById('btn-siguiente-nivel');
+
+        function crearBotonesNiveles() {
+            contenedorNiveles.innerHTML = '';
+            for (let i = 1; i <= 10; i++) {
+                const btn = document.createElement('button');
+                btn.classList.add('btn-nivel'); btn.textContent = i; btn.setAttribute('aria-label', `Jugar nivel ${i}`);
+                btn.onclick = () => iniciarNivel(i);
+                contenedorNiveles.appendChild(btn);
+            }
+        }
+
+        function iniciarNivel(numeroNivel) {
+            nivelActual = numeroNivel; pantallaNiveles.style.display = 'none'; pantallaJuego.style.display = 'flex';
+            mensajeVictoria.style.display = 'none'; infoNivel.textContent = `⭐ Nivel ${nivelActual} ⭐`; cargarTablero();
+        }
+
+        function volverSelectorNiveles() { pantallaJuego.style.display = 'none'; pantallaNiveles.style.display = 'flex'; }
+
+        function cargarTablero() {
+            tablero.innerHTML = ''; parejasEncontradas = 0; primeraCarta = null; segundaCarta = null; bloqueoTablero = false;
+            const config = configuracionNiveles[nivelActual - 1]; totalParejasActual = config.parejas;
+            tablero.style.gridTemplateColumns = `repeat(${config.columnas}, 1fr)`;
+            const simbolosNivel = bancoSimbolos.slice(0, config.parejas);
+            let cartasArray = [...simbolosNivel, ...simbolosNivel].sort(() => Math.random() - 0.5);
+
+            cartasArray.forEach(simbolo => {
+                const carta = document.createElement('div'); carta.classList.add('carta'); carta.dataset.simbolo = simbolo;
+                carta.setAttribute('role', 'button'); carta.setAttribute('aria-label', 'Carta boca abajo'); carta.setAttribute('tabindex', '0');
+                carta.innerHTML = `<div class="cara carta-frente">?</div><div class="cara carta-dorso" aria-hidden="true">${simbolo}</div>`;
+                carta.addEventListener('click', voltearCarta); carta.addEventListener('keypress', (e) => { if (e.key === 'Enter') voltearCarta.call(carta); });
+                tablero.appendChild(carta);
+            });
+        }
+
+        function voltearCarta() {
+            if (bloqueoTablero || this === primeraCarta || this.classList.contains('volteada')) return;
+            this.classList.add('volteada'); this.setAttribute('aria-label', `Carta volteada con símbolo ${this.dataset.simbolo}`);
+            if (!primeraCarta) { primeraCarta = this; return; }
+            segundaCarta = this; comprobarPareja();
+        }
+
+        function comprobarPareja() {
+            let esPareja = primeraCarta.dataset.simbolo === segundaCarta.dataset.simbolo;
+            if (esPareja) {
+                parejasEncontradas++; resetearTurno();
+                if (parejasEncontradas === totalParejasActual) setTimeout(mostrarVictoria, 500);
+            } else {
+                bloqueoTablero = true;
+                setTimeout(() => { primeraCarta.classList.remove('volteada'); segundaCarta.classList.remove('volteada');
+                primeraCarta.setAttribute('aria-label', 'Carta boca abajo'); segundaCarta.setAttribute('aria-label', 'Carta boca abajo'); resetearTurno(); }, 1000);
+            }
+        }
+
+        function resetearTurno() { primeraCarta = null; segundaCarta = null; bloqueoTablero = false; }
+
+        function mostrarVictoria() {
+            mensajeVictoria.style.display = 'block';
+            if (nivelActual < 10) { btnSiguienteNivel.style.display = 'inline-block'; btnSiguienteNivel.onclick = () => iniciarNivel(nivelActual + 1); } 
+            else { btnSiguienteNivel.style.display = 'none'; mensajeVictoria.querySelector('h2').textContent = '¡Juego Completado! 🏆'; }
+        }
+
+        crearBotonesNiveles();
+    </script>
+</body>
+</html>

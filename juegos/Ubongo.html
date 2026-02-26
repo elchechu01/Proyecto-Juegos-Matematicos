@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubongo - Puzzle de Piezas</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+
+        body {
+            background-color: #011C26;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            padding: 20px;
+            user-select: none;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #91E3F2;
+            text-shadow: 2px 2px 0px #0F222E;
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .btn-inicio {
+            display: inline-block; 
+            margin-top: 10px; 
+            padding: 14px 35px; 
+            background-color: #005a7a; 
+            color: #ffffff; 
+            text-decoration: none; 
+            border-radius: 30px; 
+            font-weight: bold; 
+            font-size: 1.2rem; 
+            border: 3px solid #ffffff; 
+            box-shadow: 0 6px 0 #0F222E; 
+            cursor: pointer; 
+            transition: all 0.1s; 
+        }
+
+        .btn-inicio:hover {
+             background-color: #91E3F2; 
+             color: #011C26; 
+        }
+
+        .btn-inicio:active {
+            transform: translateY(6px); 
+            box-shadow: 0 0 0 #0F222E; 
+        }
+        .subtitulo {
+            color: #aaa;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* ===== BOTONES COMUNES ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 28px;
+            background-color: #005a7a;
+            color: #ffffff;
+            border: 3px solid #ffffff;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #0F222E;
+            transition: all 0.1s;
+            text-decoration: none;
+        }
+        .btn:hover  { background-color: #91E3F2; color: #011C26; }
+        .btn:active { transform: translateY(5px); box-shadow: 0 1px 0 #0F222E; }
+
+        .btn-sm {
+            padding: 8px 18px;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 0 #0F222E;
+        }
+
+        .btn-peligro { background-color: #7a2200; }
+        .btn-peligro:hover { background-color: #ff6b35; color: #011C26; }
+
+        /* ===== PANTALLA MENÚ NIVELES ===== */
+        #pantalla-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 620px;
+            background: #0F222E;
+            padding: 40px 30px;
+            border-radius: 30px;
+            border: 4px solid #005a7a;
+            box-shadow: 0 10px 0 #023646;
+            margin-top: 10px;
+        }
+
+        #pantalla-menu h2 { font-size: 1.8rem; margin-bottom: 30px; color: #91E3F2; }
+
+        .grid-niveles {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
+
+        .btn-nivel {
+            width: 100%;
+            aspect-ratio: 1;
+            background-color: #005a7a;
+            border: 4px solid white;
+            border-radius: 18px;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #023646;
+            transition: all 0.1s;
+        }
+        .btn-nivel:hover  { background-color: #91E3F2; color: #011C26; }
+        .btn-nivel:active { transform: translateY(5px); box-shadow: 0 1px 0 #023646; }
+
+        /* ===== PANTALLA JUEGO ===== */
+        #pantalla-juego {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 820px;
+        }
+
+        .cabecera-juego {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        #titulo-nivel {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #91E3F2;
+        }
+
+        .area-juego {
+            background-color: #0F222E;
+            padding: 25px;
+            border-radius: 25px;
+            border: 4px solid #005a7a;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        /* ===== INVENTARIO DE PIEZAS ===== */
+        .zona-piezas {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: rgba(0,0,0,0.35);
+            padding: 18px;
+            border-radius: 15px;
+            min-width: 140px;
+            align-items: center;
+        }
+
+        .zona-piezas h3 {
+            color: #91E3F2;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .pieza-contenedor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .pieza-grid {
+            display: grid;
+            gap: 3px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 10px;
+            border: 3px solid transparent;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+        .pieza-grid:hover:not(.usada) { transform: scale(1.08); }
+        .pieza-grid.seleccionada {
+            border-color: #ffffff;
+            background: rgba(145, 227, 242, 0.15);
+            animation: pulsar-borde 1s ease-in-out infinite;
+        }
+        @keyframes pulsar-borde {
+            0%, 100% { border-color: #ffffff; }
+            50%       { border-color: #91E3F2; }
+        }
+        .pieza-grid.usada { opacity: 0.25; pointer-events: none; }
+
+        .bloque { width: 28px; height: 28px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.3); }
+        .bloque-vacio { width: 28px; height: 28px; background: transparent; }
+
+        .hint-pieza {
+            font-size: 0.72rem;
+            color: #91E3F2;
+            opacity: 0;
+            transition: opacity 0.2s;
+            text-align: center;
+        }
+        .pieza-grid.seleccionada ~ .hint-pieza { opacity: 1; }
+
+        /* ===== TABLERO ===== */
+        .tablero-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #tablero {
+            display: grid;
+            gap: 3px;
+            background: #011C26;
+            padding: 12px;
+            border: 4px solid #ffffff;
+            border-radius: 12px;
+        }
+
+        .celda {
+            width: 48px;
+            height: 48px;
+            background: #023646;
+            border-radius: 5px;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .celda.objetivo {
+            background: #e8f4f8;
+            border: 2px dashed #91E3F2;
+            cursor: pointer;
+        }
+        .celda.objetivo:hover {
+            background: #ffffff;
+            transform: scale(0.93);
+        }
+        .celda.colocada {
+            border: 2px solid rgba(255,255,255,0.5) !important;
+            cursor: default;
+        }
+
+        /* ===== MODAL VICTORIA ===== */
+        #modal-victoria {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(1, 28, 38, 0.92);
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .victoria-caja {
+            background: #0F222E;
+            border: 4px solid #91E3F2;
+            border-radius: 25px;
+            padding: 40px 50px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            animation: aparecer 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes aparecer {
+            0%   { transform: scale(0.4); opacity: 0; }
+            80%  { transform: scale(1.05); }
+            100% { transform: scale(1);   opacity: 1; }
+        }
+
+        .victoria-caja .emoji { font-size: 4rem; margin-bottom: 10px; }
+        .victoria-caja h2 { color: #91E3F2; font-size: 2.2rem; margin-bottom: 8px; }
+        .victoria-caja p  { color: #ccc; font-size: 1.1rem; margin-bottom: 25px; }
+
+        .victoria-botones {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* ===== INDICADOR PIEZAS ===== */
+        .indicador {
+            font-size: 0.95rem;
+            color: #aaa;
+            text-align: center;
+        }
+        .indicador span { color: #91E3F2; font-weight: bold; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .grid-niveles { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+            .btn-nivel { font-size: 1.4rem; }
+            .celda, .celda.objetivo { width: 38px; height: 38px; }
+            .bloque, .bloque-vacio { width: 24px; height: 24px; }
+            .area-juego { gap: 20px; padding: 15px; }
+            .victoria-caja { padding: 25px 20px; }
+            .victoria-caja h2 { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🧩 Ubongo Challenge</h1>
+    <p class="subtitulo">Selecciona una pieza · Haz clic para rotar · Colócala en el tablero</p>
+
+    <a href="/../index.html" class="btn-inicio">🏠 Volver al Menú</a>
+
+    <div id="menu-niveles">
+
+    <!-- ====== MENÚ DE NIVELES ====== -->
+    <div id="pantalla-menu">
+        <h2>👉 Elige un Nivel 👈</h2>
+        <div class="grid-niveles" id="contenedor-niveles"></div>
+    </div>
+
+    <!-- ====== PANTALLA DE JUEGO ====== -->
+    <div id="pantalla-juego">
+        <div class="cabecera-juego">
+            <button class="btn btn-sm" onclick="volverMenu()">🏠 Menú</button>
+            <div id="titulo-nivel">Nivel 1</div>
+            <button class="btn btn-sm btn-peligro" onclick="reiniciarTablero()">🗑️ Limpiar</button>
+        </div>
+
+        <div class="indicador">
+            Piezas colocadas: <span id="piezas-colocadas">0</span> / <span id="piezas-total">0</span>
+        </div>
+
+        <div class="area-juego">
+            <div class="zona-piezas">
+                <h3>Piezas</h3>
+                <div id="inventario"></div>
+                <p style="font-size:0.75rem; color:#888; text-align:center; margin-top:6px;">
+                    1 clic = seleccionar<br>2.º clic = rotar
+                </p>
+            </div>
+            <div class="tablero-wrap">
+                <div id="tablero"></div>
+                <p style="font-size:0.8rem; color:#888;">Haz clic en el tablero blanco para colocar la pieza seleccionada</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== MODAL VICTORIA ====== -->
+    <div id="modal-victoria">
+        <div class="victoria-caja">
+            <div class="emoji">🎉</div>
+            <h2 id="victoria-titulo">¡Nivel completado!</h2>
+            <p id="victoria-texto">¡Encajaste todas las piezas perfectamente!</p>
+            <div class="victoria-botones">
+                <button class="btn" onclick="volverMenu()">🏠 Menú</button>
+                <button class="btn" id="btn-siguiente" onclick="siguienteNivel()">Siguiente ▶</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // =============================================
+    //  DEFINICIÓN DE PIEZAS
+    // =============================================
+    const PIEZAS = {
+        I1: [[1]],
+        I2: [[1,1]],
+        I3: [[1,1,1]],
+        I4: [[1,1,1,1]],
+        L3: [[1,0],[1,1]],
+        O4: [[1,1],[1,1]],
+        L4: [[1,0,0],[1,1,1]],
+        T4: [[1,1,1],[0,1,0]],
+        S4: [[0,1,1],[1,1,0]],
+        Z4: [[1,1,0],[0,1,1]]
+    };
+
+    // =============================================
+    //  NIVELES VERIFICADOS (soluciones documentadas)
+    // =============================================
+    const NIVELES = [
+        // Nivel 1 — I3 (3 celdas)
+        // Solución: I3 en (1,1)
+        {
+            piezas: [PIEZAS.I3],
+            grid: [
+                [0,0,0,0,0],
+                [0,1,1,1,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0]
+            ]
+        },
+        // Nivel 2 — I2 + I2 (4 celdas)
+        // Solución: I2-vertical en (1,1) y (1,2)
+        {
+            piezas: [PIEZAS.I2, PIEZAS.I2],
+            grid: [
+                [0,0,0,0,0],
+                [0,1,1,0,0],
+                [0,1,1,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0]
+            ]
+        },
+        // Nivel 3 — I3 + I2 (5 celdas)
+        // Solución: I3 en (1,1), I2 en (2,2)
+        {
+            piezas: [PIEZAS.I3, PIEZAS.I2],
+            grid: [
+                [0,0,0,0,0],
+                [0,1,1,1,0],
+                [0,0,1,1,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0]
+            ]
+        },
+        // Nivel 4 — L3 + I3 (6 celdas)
+        // Solución: L3[[1,0],[1,1]] en (1,1)→(1,1)(2,1)(2,2) | I3 en (1,2)→(1,2)(1,3)(1,4)
+        {
+            piezas: [PIEZAS.L3, PIEZAS.I3],
+            grid: [
+                [0,0,0,0,0],
+                [0,1,1,1,1],
+                [0,1,1,0,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0]
+            ]
+        },
+        // Nivel 5 — O4 + I3 (7 celdas)
+        // Solución: O4 en (1,1), I3 en (3,1)
+        {
+            piezas: [PIEZAS.O4, PIEZAS.I3],
+            grid: [
+                [0,0,0,0,0],
+                [0,1,1,0,0],
+                [0,1,1,0,0],
+                [0,1,1,1,0],
+                [0,0,0,0,0]
+            ]
+        },
+        // Nivel 6 — L4 + I4 (8 celdas)
+        // Solución: I4 en (1,1), L4 en (2,1): (2,1),(3,1),(3,2),(3,3)
+        {
+            piezas: [PIEZAS.I4, PIEZAS.L4],
+            grid: [
+                [0,0,0,0,0],
+                [0,1,1,1,1],
+                [0,1,0,0,0],
+                [0,1,1,1,0],
+                [0,0,0,0,0]
+            ]
+        },
+        // Nivel 7 — T4 + L4 (8 celdas)
+        // Solución: T4 en (1,1)→(1,1)(1,2)(1,3)(2,2), L4 en (2,1)→(2,1)(3,1)(3,2)(3,3)
+        {
+            piezas: [PIEZAS.T4, PIEZAS.L4],
+            grid: [
+                [0,0,0,0,0],
+                [0,1,1,1,0],
+                [0,1,1,0,0],
+                [0,1,1,1,0],
+                [0,0,0,0,0]
+            ]
+        },
+        // Nivel 8 — I4 + I3 + I3 (10 celdas)
+        // Solución: I4 en (0,0), I3 en (1,1), I3 en (2,1)
+        {
+            piezas: [PIEZAS.I4, PIEZAS.I3, PIEZAS.I3],
+            grid: [
+                [1,1,1,1,0],
+                [0,1,1,1,0],
+                [0,1,1,1,0],
+                [0,0,0,0,0],
+                [0,0,0,0,0]
+            ]
+        }
+    ];
+
+    const COLORES = ['#e74c3c','#3498db','#f1c40f','#2ecc71','#9b59b6','#e67e22'];
+    const TOTAL_NIVELES = NIVELES.length;
+    const GRID_SIZE = 5;
+
+    // =============================================
+    //  ESTADO DEL JUEGO
+    // =============================================
+    let nivelActual = 0;
+    let piezasEnMano = [];
+    let estadoTablero = [];
+    let piezaSeleccionada = null;
+
+    // =============================================
+    //  ARRANQUE
+    // =============================================
+    function init() {
+        const cont = document.getElementById('contenedor-niveles');
+        cont.innerHTML = '';
+        for (let i = 0; i < TOTAL_NIVELES; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'btn-nivel';
+            btn.textContent = i + 1;
+            btn.setAttribute('aria-label', `Jugar nivel ${i + 1}`);
+            btn.onclick = () => iniciarNivel(i);
+            cont.appendChild(btn);
+        }
+    }
+
+    // =============================================
+    //  CONTROL DE PANTALLAS
+    // =============================================
+    function iniciarNivel(index) {
+        nivelActual = index;
+        document.getElementById('pantalla-menu').style.display = 'none';
+        document.getElementById('pantalla-juego').style.display = 'flex';
+        document.getElementById('modal-victoria').style.display = 'none';
+        document.getElementById('titulo-nivel').textContent = `Nivel ${index + 1}`;
+        cargarNivel();
+    }
+
+    function volverMenu() {
+        document.getElementById('pantalla-juego').style.display = 'none';
+        document.getElementById('modal-victoria').style.display = 'none';
+        document.getElementById('pantalla-menu').style.display = 'flex';
+    }
+
+    function siguienteNivel() {
+        if (nivelActual + 1 < TOTAL_NIVELES) {
+            iniciarNivel(nivelActual + 1);
+        } else {
+            volverMenu();
+        }
+    }
+
+    function reiniciarTablero() {
+        document.getElementById('modal-victoria').style.display = 'none';
+        cargarNivel();
+    }
+
+    // =============================================
+    //  CARGA DEL NIVEL
+    // =============================================
+    function cargarNivel() {
+        const config = NIVELES[nivelActual];
+        piezasEnMano = config.piezas.map((forma, i) => ({
+            id: i,
+            forma: copiarMatriz(forma),
+            color: COLORES[i % COLORES.length],
+            usada: false
+        }));
+        estadoTablero = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(null));
+        piezaSeleccionada = null;
+        actualizarIndicador();
+        renderizarInventario();
+        renderizarTablero();
+    }
+
+    function copiarMatriz(m) {
+        return m.map(fila => [...fila]);
+    }
+
+    function actualizarIndicador() {
+        const colocadas = piezasEnMano.filter(p => p.usada).length;
+        document.getElementById('piezas-colocadas').textContent = colocadas;
+        document.getElementById('piezas-total').textContent = piezasEnMano.length;
+    }
+
+    // =============================================
+    //  ROTACIÓN
+    // =============================================
+    function rotarMatriz(m) {
+        // Rota 90° en sentido horario
+        const filas = m.length;
+        const cols = m[0].length;
+        const resultado = Array.from({ length: cols }, () => Array(filas).fill(0));
+        for (let r = 0; r < filas; r++) {
+            for (let c = 0; c < cols; c++) {
+                resultado[c][filas - 1 - r] = m[r][c];
+            }
+        }
+        return resultado;
+    }
+
+    // =============================================
+    //  LÓGICA DE PIEZAS
+    // =============================================
+    function clickPieza(id) {
+        if (piezasEnMano[id].usada) return;
+
+        if (piezaSeleccionada === id) {
+            // Segunda pulsación → rotar
+            piezasEnMano[id].forma = rotarMatriz(piezasEnMano[id].forma);
+        } else {
+            piezaSeleccionada = id;
+        }
+        renderizarInventario();
+    }
+
+    // =============================================
+    //  COLOCAR PIEZA EN EL TABLERO  (bug corregido)
+    // =============================================
+    function intentarColocar(filaInicio, colInicio) {
+        if (piezaSeleccionada === null) return;
+
+        const p = piezasEnMano[piezaSeleccionada];
+        const forma = p.forma;
+        const configGrid = NIVELES[nivelActual].grid;
+        let cabe = true;
+
+        // Usamos && cabe para salir del doble bucle sin break anidado
+        for (let r = 0; r < forma.length && cabe; r++) {
+            for (let c = 0; c < forma[0].length && cabe; c++) {
+                if (forma[r][c] === 1) {
+                    const br = filaInicio + r;
+                    const bc = colInicio + c;
+                    if (
+                        br < 0 || br >= GRID_SIZE ||
+                        bc < 0 || bc >= GRID_SIZE ||
+                        configGrid[br][bc] === 0 ||
+                        estadoTablero[br][bc] !== null
+                    ) {
+                        cabe = false;
+                    }
+                }
+            }
+        }
+
+        if (!cabe) {
+            // Feedback visual de error
+            sacudirTablero();
+            return;
+        }
+
+        // Colocar pieza
+        for (let r = 0; r < forma.length; r++) {
+            for (let c = 0; c < forma[0].length; c++) {
+                if (forma[r][c] === 1) {
+                    estadoTablero[filaInicio + r][colInicio + c] = p.color;
+                }
+            }
+        }
+
+        p.usada = true;
+        piezaSeleccionada = null;
+        actualizarIndicador();
+        renderizarTablero();
+        renderizarInventario();
+        comprobarVictoria();
+    }
+
+    function sacudirTablero() {
+        const t = document.getElementById('tablero');
+        t.style.animation = 'none';
+        t.offsetHeight; // reflow
+        t.style.animation = 'sacudir 0.35s ease';
+    }
+
+    // =============================================
+    //  COMPROBAR VICTORIA
+    // =============================================
+    function comprobarVictoria() {
+        const configGrid = NIVELES[nivelActual].grid;
+        for (let r = 0; r < GRID_SIZE; r++) {
+            for (let c = 0; c < GRID_SIZE; c++) {
+                if (configGrid[r][c] === 1 && estadoTablero[r][c] === null) return;
+            }
+        }
+        mostrarVictoria();
+    }
+
+    function mostrarVictoria() {
+        const modal = document.getElementById('modal-victoria');
+        const titulo = document.getElementById('victoria-titulo');
+        const texto  = document.getElementById('victoria-texto');
+        const btnSig = document.getElementById('btn-siguiente');
+
+        if (nivelActual + 1 < TOTAL_NIVELES) {
+            titulo.textContent = `¡Nivel ${nivelActual + 1} completado! 🏆`;
+            texto.textContent = '¡Encajaste todas las piezas a la perfección!';
+            btnSig.textContent = `Nivel ${nivelActual + 2} ▶`;
+            btnSig.style.display = 'inline-flex';
+        } else {
+            titulo.textContent = '¡Juego completado! 🏆';
+            texto.textContent = '¡Increíble! ¡Has superado todos los niveles!';
+            btnSig.style.display = 'none';
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    // =============================================
+    //  RENDER INVENTARIO
+    // =============================================
+    function renderizarInventario() {
+        const div = document.getElementById('inventario');
+        div.innerHTML = '';
+
+        piezasEnMano.forEach(p => {
+            const cont = document.createElement('div');
+            cont.className = 'pieza-contenedor';
+
+            const pDiv = document.createElement('div');
+            pDiv.className = 'pieza-grid';
+            if (piezaSeleccionada === p.id) pDiv.classList.add('seleccionada');
+            if (p.usada) pDiv.classList.add('usada');
+            pDiv.style.gridTemplateColumns = `repeat(${p.forma[0].length}, 28px)`;
+            pDiv.onclick = () => clickPieza(p.id);
+            pDiv.setAttribute('role', 'button');
+            pDiv.setAttribute('tabindex', '0');
+            pDiv.setAttribute('aria-label', p.usada ? 'Pieza usada' : `Pieza ${p.id + 1}`);
+            pDiv.addEventListener('keypress', e => { if (e.key === 'Enter') clickPieza(p.id); });
+
+            for (let r = 0; r < p.forma.length; r++) {
+                for (let c = 0; c < p.forma[0].length; c++) {
+                    const b = document.createElement('div');
+                    if (p.forma[r][c] === 1) {
+                        b.className = 'bloque';
+                        b.style.backgroundColor = p.color;
+                    } else {
+                        b.className = 'bloque-vacio';
+                    }
+                    pDiv.appendChild(b);
+                }
+            }
+
+            const hint = document.createElement('div');
+            hint.className = 'hint-pieza';
+            hint.textContent = '↻ clic para rotar';
+
+            cont.appendChild(pDiv);
+            cont.appendChild(hint);
+            div.appendChild(cont);
+        });
+    }
+
+    // =============================================
+    //  RENDER TABLERO
+    // =============================================
+    function renderizarTablero() {
+        const div = document.getElementById('tablero');
+        div.innerHTML = '';
+        div.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 48px)`;
+
+        const configGrid = NIVELES[nivelActual].grid;
+
+        for (let r = 0; r < GRID_SIZE; r++) {
+            for (let c = 0; c < GRID_SIZE; c++) {
+                const celda = document.createElement('div');
+                celda.className = 'celda';
+
+                const colorColocado = estadoTablero[r][c];
+
+                if (colorColocado !== null) {
+                    celda.classList.add('colocada');
+                    celda.style.backgroundColor = colorColocado;
+                } else if (configGrid[r][c] === 1) {
+                    celda.classList.add('objetivo');
+                    celda.onclick = () => intentarColocar(r, c);
+                    celda.setAttribute('role', 'button');
+                    celda.setAttribute('tabindex', '0');
+                    celda.setAttribute('aria-label', `Colocar pieza en fila ${r+1}, columna ${c+1}`);
+                    celda.addEventListener('keypress', e => {
+                        if (e.key === 'Enter') intentarColocar(r, c);
+                    });
+                }
+
+                div.appendChild(celda);
+            }
+        }
+    }
+
+    // =============================================
+    //  ANIMACIÓN CSS EXTRA
+    // =============================================
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
+        @keyframes sacudir {
+            0%,100% { transform: translateX(0); }
+            20%      { transform: translateX(-6px); }
+            40%      { transform: translateX(6px); }
+            60%      { transform: translateX(-4px); }
+            80%      { transform: translateX(4px); }
+        }
+    `;
+    document.head.appendChild(styleSheet);
+
+    // =============================================
+    //  ARRANQUE
+    // =============================================
+    init();
+    </script>
+</body>
+</html>

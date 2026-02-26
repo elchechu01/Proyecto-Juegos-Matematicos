@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reglas de los Juegos</title>
+    <style>
+        :root {
+            --color-fondo-oscuro: #011C26; 
+            --color-fondo-medio: #0F222E;
+            --color-fondo-blancoazulado: #cdecff;
+            --color-secundario: #005a7a; 
+            --color-acento: #91E3F2; 
+            --texto-blanco: #ffffff;
+            --texto-oscuro: #011C26;
+        }
+
+        .menu-toggle { display: none; }
+        .hamburguesa { display: none; }
+
+        .cabecera {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 50px;
+            background-color: var(--color-fondo-oscuro);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            box-sizing: border-box;
+        }
+
+        .menu { display: flex; gap: 15px; }
+
+        .menu a {
+            text-decoration: none;
+            color: var(--texto-blanco);
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .menu a:hover { background-color: var(--color-secundario); color: var(--texto-blanco); }
+
+        body {
+            background-color: var(--color-fondo-blancoazulado);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            padding-top: 120px;
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .contenedor-reglas {
+            max-width: 800px;
+            width: 100%;
+            background-color: var(--color-fondo-oscuro);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            color: var(--texto-blanco);
+            box-sizing: border-box;
+            transition: margin-top 0.4s ease-in-out;
+        }
+
+        h1 {
+            color: var(--color-acento);
+            text-align: center;
+            font-size: 2.5rem;
+            margin-top: 0;
+            margin-bottom: 30px;
+            border-bottom: 2px solid rgba(145, 227, 242, 0.3);
+            padding-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .juego-regla {
+            margin-bottom: 40px;
+            padding: 20px;
+            border-left: 5px solid var(--color-acento);
+            background-color: var(--color-fondo-medio);
+            border-radius: 0 10px 10px 0;
+            transition: transform 0.3s ease; 
+        }
+
+        .juego-regla:hover {
+            transform: translateX(8px);
+        }
+
+        h2 {
+            color: var(--color-acento);
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            color: var(--texto-blanco);
+            font-size: 1rem;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        p {
+            line-height: 1.7;
+            color: var(--texto-blanco);
+            font-size: 1.05rem;
+        }
+
+        .btn-volver {
+            display: block;
+            width: fit-content;
+            margin: 30px auto 10px auto;
+            padding: 12px 30px;
+            background-color: var(--color-secundario); 
+            color: var(--texto-blanco); 
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 2px solid transparent;
+        }
+
+        .btn-volver:hover {
+            background-color: var(--color-acento);
+            color: var(--texto-oscuro);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .cabecera { padding: 15px 20px; justify-content: center; }
+            .hamburguesa { display: block; color: var(--color-acento); font-size: 28px; cursor: pointer; user-select: none; }
+            .menu { display: flex; position: absolute; top: 65px; left: 0; width: 100%; flex-direction: column; background: var(--color-fondo-oscuro); max-height: 0; overflow: hidden; transition: max-height 0.4s ease-in-out, padding 0.3s; gap: 0; }
+            .menu-toggle:checked ~ .cabecera .menu { max-height: 500px; padding: 10px 0 20px 0; box-shadow: 0 4px 0 0 var(--color-secundario); }
+            .menu a { text-align: center; width: 100%; border-radius: 0; padding: 15px; }
+            body { padding: 15px; padding-top: 100px; }
+            .contenedor-reglas { padding: 25px 15px; }
+            .menu-toggle:checked ~ .contenedor-reglas { margin-top: 250px; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.4rem; }
+            .juego-regla { padding: 15px; margin-bottom: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" aria-label="Abrir menú de navegación">
+
+    <div class="cabecera">
+        <label for="menu-toggle" class="hamburguesa" aria-hidden="true">☰</label>
+        <div class="menu" role="navigation">
+            <a href="index.html#inicio">Inicio</a>
+            <a href="index.html#juegos-aula">Juegos Clase A1</a>
+            <a href="index.html#minijuegos">Minijuegos Online</a>
+            <a href="index.html#visitanos">Cuándo Visitarnos</a>
+            <a href="index.html#nosotros">Nosotros</a>
+        </div>
+    </div>
+    
+    <div class="contenedor-reglas">
+        <h1>Reglas del Proyecto</h1>
+
+        <div class="juego-regla">
+            <h2>Juego de Parejas</h2>
+            <h3>¿Cómo se juega?</h3>
+            <p>Se colocan todas las fichas boca abajo. Por turnos, cada participante levanta dos. Si los símbolos matemáticos coinciden, retira ese par del tablero. Si no coinciden, las vuelve a girar en su misma posición. Gana quien consiga acumular más parejas al vaciar el tablero.</p>
+        </div>
+
+        <div class="juego-regla">
+            <h2>Tres en Raya Natural</h2>
+            <h3>¿Cómo se juega?</h3>
+            <p>Dos personas eligen su tipo de ficha (piedras decoradas). Por turnos, colocan una ficha en una celda vacía del tablero de 3x3. Quien logre alinear primero tres de sus fichas de forma horizontal, vertical o diagonal gana la partida. Si se llena el tablero sin líneas, es un empate.</p>
+        </div>
+
+        <div class="juego-regla">
+            <h2>Tableros Ubongo</h2>
+            <h3>¿Cómo se juega?</h3>
+            <p>A cada participante se le entrega una plantilla con una zona en blanco y un set de piezas geométricas. El reto es rotar y encajar las piezas hasta cubrir exactamente la zona blanca de la plantilla. ¡Gana la persona más veloz en resolverlo!</p>
+        </div>
+        
+        <a href="index.html" class="btn-volver">VOLVER AL INICIO</a>
+    </div>
+
+</body>
+</html>

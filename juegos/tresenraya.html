@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tres en Raya - Emojis</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: #011C26; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; padding: 20px; }
+        h1 { font-size: 2.5rem; margin-bottom: 15px; text-shadow: 2px 2px 0px #0F222E; text-align: center; color: #91E3F2; }
+        .btn-inicio { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 25px; background-color: #005a7a; color: #ffffff; text-decoration: none; border: 3px solid #fff; border-radius: 30px; font-weight: bold; font-size: 1.2rem; margin-bottom: 25px; box-shadow: 0 5px 0 #0F222E; transition: all 0.1s; }
+        .btn-inicio:hover { background-color: #91E3F2; color: #011C26; }
+        .btn-inicio:active { transform: translateY(4px); box-shadow: 0 0 0 #0F222E; }
+        .status { font-size: 1.8rem; margin-bottom: 20px; color: #ffffff; font-weight: bold; height: 3.5rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .contenedor-juego { background-color: #0F222E; padding: 25px; border-radius: 25px; border: 4px solid #005a7a; box-shadow: 0 10px 0 #011C26; display: flex; flex-direction: column; align-items: center; }
+        .tablero { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
+        .celda { width: 100px; height: 100px; background-color: #005a7a; border: 4px solid #fff; border-radius: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 6px 0 #011C26; transition: all 0.2s ease; font-size: 3.5rem; user-select: none; }
+        .celda:hover:not(.ocupada) { background-color: #91E3F2; transform: scale(1.05); }
+        .celda.ocupada { cursor: not-allowed; background-color: #023646; }
+        .celda.ganadora { background-color: #FFD700; animation: latido 0.5s infinite alternate; }
+        @keyframes latido { from { transform: scale(1); } to { transform: scale(1.1); } }
+        .btn-reinicio { padding: 12px 25px; background-color: #005a7a; color: #ffffff; border: 3px solid #fff; border-radius: 20px; font-weight: bold; font-size: 1.2rem; cursor: pointer; box-shadow: 0 5px 0 #0F222E; transition: all 0.1s; }
+        .btn-reinicio:hover { background-color: #91E3F2; color: #011C26; }
+        .btn-reinicio:active { transform: translateY(4px); box-shadow: 0 0 0 #0F222E; }
+    </style>
+</head>
+<body>
+
+    <h1>🐞 Mariquita vs Among Us ඞ</h1>
+    
+    <a href="/index.html" class="btn-inicio" aria-label="Volver al inicio de la web">🏠 Volver al Menú</a>
+
+    <div class="status" id="status" aria-live="polite">Turno de: 🐞</div>
+
+    <div class="contenedor-juego">
+        <div class="tablero" id="tablero" role="grid" aria-label="Tablero de 3x3 de tres en raya">
+            <div class="celda" data-index="0" role="button" tabindex="0" aria-label="Celda superior izquierda"></div>
+            <div class="celda" data-index="1" role="button" tabindex="0" aria-label="Celda superior central"></div>
+            <div class="celda" data-index="2" role="button" tabindex="0" aria-label="Celda superior derecha"></div>
+            <div class="celda" data-index="3" role="button" tabindex="0" aria-label="Celda central izquierda"></div>
+            <div class="celda" data-index="4" role="button" tabindex="0" aria-label="Celda central"></div>
+            <div class="celda" data-index="5" role="button" tabindex="0" aria-label="Celda central derecha"></div>
+            <div class="celda" data-index="6" role="button" tabindex="0" aria-label="Celda inferior izquierda"></div>
+            <div class="celda" data-index="7" role="button" tabindex="0" aria-label="Celda inferior central"></div>
+            <div class="celda" data-index="8" role="button" tabindex="0" aria-label="Celda inferior derecha"></div>
+        </div>
+
+        <button class="btn-reinicio" onclick="reiniciarJuego()" aria-label="Botón para limpiar el tablero y reiniciar la partida">
+            🔄 Reiniciar Partida
+        </button>
+    </div>
+
+    <script>
+        const EMOJI_X = '🐞'; const EMOJI_O = 'ඞ';
+        let turno = EMOJI_X; let juegoActivo = true; let estadoTablero = ["", "", "", "", "", "", "", "", ""];
+        const celdas = document.querySelectorAll('.celda'); const statusText = document.getElementById('status');
+        const condicionesVictoria = [ [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6] ];
+
+        function manejarInteraccion(e) {
+            if(e.type === 'keypress' && e.key !== 'Enter') return;
+            const celda = e.target; const index = celda.getAttribute('data-index');
+            if (estadoTablero[index] !== "" || !juegoActivo) return;
+            estadoTablero[index] = turno; celda.textContent = turno; celda.classList.add('ocupada');
+            celda.setAttribute('aria-label', `Celda ocupada por ${turno}`);
+            validarResultado();
+        }
+
+        function validarResultado() {
+            let rondaGanada = false; let comboGanador = [];
+            for (let i = 0; i < condicionesVictoria.length; i++) {
+                const [a, b, c] = condicionesVictoria[i];
+                if (estadoTablero[a] === "" || estadoTablero[b] === "" || estadoTablero[c] === "") continue;
+                if (estadoTablero[a] === estadoTablero[b] && estadoTablero[b] === estadoTablero[c]) {
+                    rondaGanada = true; comboGanador = [a, b, c]; break;
+                }
+            }
+            if (rondaGanada) { statusText.textContent = `¡Gana ${turno}! 🎉`; resaltarGanadores(comboGanador); juegoActivo = false; return; }
+            if (!estadoTablero.includes("")) { statusText.textContent = "¡Empate! 🤝"; juegoActivo = false; return; }
+            turno = (turno === EMOJI_X) ? EMOJI_O : EMOJI_X; statusText.textContent = `Turno de: ${turno}`;
+        }
+
+        function resaltarGanadores(indices) { indices.forEach(i => celdas[i].classList.add('ganadora')); }
+
+        function reiniciarJuego() {
+            turno = EMOJI_X; juegoActivo = true; estadoTablero = ["", "", "", "", "", "", "", "", ""];
+            statusText.textContent = `Turno de: ${EMOJI_X}`;
+            celdas.forEach(celda => { celda.textContent = ""; celda.classList.remove('ocupada', 'ganadora'); celda.setAttribute('aria-label', 'Celda vacía'); });
+        }
+
+        celdas.forEach(celda => { celda.addEventListener('click', manejarInteraccion); celda.addEventListener('keypress', manejarInteraccion); });
+    </script>
+</body>
+</html>

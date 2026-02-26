@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Proyecto Matemáticas</title>
+        <link rel="stylesheet" href="/css/index.css">
+    </head>
+    <body>
+
+        <div class="cabecera">
+            <div class="logo">Proyecto Juegos Matemáticos</div>
+            
+            <input type="checkbox" id="menu-toggle" class="menu-toggle" aria-label="Abrir menú de navegación">
+            
+            <label for="menu-toggle" class="hamburguesa" aria-hidden="true">☰</label>
+
+            <div class="menu" role="navigation">
+                <a href="#inicio" onclick="document.getElementById('menu-toggle').checked = false">Inicio</a>
+                <a href="#juegos-aula" onclick="document.getElementById('menu-toggle').checked = false">Juegos Manuales</a>
+                <a href="#minijuegos" onclick="document.getElementById('menu-toggle').checked = false">Minijuegos Online</a>
+                <a href="#visitanos" onclick="document.getElementById('menu-toggle').checked = false">Cuándo visitarnos</a>
+                <a href="#nosotros" onclick="document.getElementById('menu-toggle').checked = false">Nosotros</a>
+            </div>
+        </div>
+
+        <div id="inicio" class="hero">
+            <h1>Os damos la Bienvenida al Proyecto</h1>
+            <p>Explora el trabajo interactivo y geométrico realizado por el Departamento de Matemáticas.</p>
+        </div>
+
+        <div id="juegos-aula" class="seccion-principal">
+            <h2 class="titulo-seccion">Juegos Manuales - Aula A1</h2>
+            <p class="subtitulo-seccion">Proyectos realizados físicamente en el aula por nuestro alumnado.</p>
+            
+            <div class="contenedor-juegos">
+                <div class="tarjeta-juego">
+                    <div class="imagen" style="background-image: url('/images/MiniaturaParejas.jpg')" role="img" aria-label="Tablero de juego de parejas con tapones reciclados"></div>
+                    <div class="contenido">
+                        <div class="titulo">Juego de Parejas</div>
+                        <div class="descripcion">Clásico juego de memoria construido con tapones reciclados. Pon a prueba tu retentiva visual emparejando símbolos.</div>
+                        <div class="acciones">
+                            <a href="#detalle-parejas" class="btn fantasma">Ver proyecto Parejas</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tarjeta-juego">
+                    <div class="imagen" style="background-image: url('/images/MiniaturaTangram.jpg')" role="img" aria-label="Piezas de madera de un Tangram formando una figura"></div>
+                    <div class="contenido">
+                        <div class="titulo">Tangram Geométrico</div>
+                        <div class="descripcion">Forma figuras complejas utilizando únicamente estas 7 piezas geométricas básicas sin superponerlas.</div>
+                        <div class="acciones">
+                            <a href="#detalle-tangram" class="btn fantasma">Ver proyecto Tangram</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tarjeta-juego">
+                    <div class="imagen" style="background-image: url('/images/MiniaturaTresEnRaya.jpg')" role="img" aria-label="Tablero rústico de Tres en Raya con piedras decoradas"></div>
+                    <div class="contenido">
+                        <div class="titulo">Tres en Raya Natural</div>
+                        <div class="descripcion">Juego de estrategia tradicional elaborado con piedras de río pintadas a mano como fichas sobre una cuadrícula.</div>
+                        <div class="acciones">
+                            <a href="#detalle-tresenraya" class="btn fantasma">Ver proyecto Tres En Raya</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tarjeta-juego">
+                    <div class="imagen" style="background-image: url('/images/MiniaturaUgonbo.jpg')" role="img" aria-label="Plantillas y piezas de cartón estilo Tetris para el juego Ubongo"></div>
+                    <div class="contenido">
+                        <div class="titulo">Tableros Ubongo</div>
+                        <div class="descripcion">Rompecabezas espacial rápido. Encaja las piezas poliominó en las plantillas geométricas antes de que acabe el tiempo.</div>
+                        <div class="acciones">
+                            <a href="#detalle-ubongo" class="btn fantasma">Ver proyecto Ubongo</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tarjeta-juego">
+                    <div class="imagen" style="background-image: url('/images/Peonzas.jpg')" role="img" aria-label="Peonzas de diferentes tamaños hechas con papel doblado"></div>
+                    <div class="contenido">
+                        <div class="titulo">Juego de Peonzas</div>
+                        <div class="descripcion">Descubre cómo la física y la simetría rotacional permiten que un simple folio doblado se convierta en una peonza funcional.</div>
+                        <div class="acciones">
+                            <a href="#detalle-peonzas" class="btn fantasma">Ver proyecto Peonzas</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tarjeta-juego">
+                    <div class="imagen" style="background-image: url('/images/PoliedroAbierto.jpg')" role="img" aria-label="Estructura de papel de un poliedro semi-desplegado"></div>
+                    <div class="contenido">
+                        <div class="titulo">Juego de Poliedros</div>
+                        <div class="descripcion">Construcción de poliedros regulares con materiales reciclados. Estudia sus caras, aristas y vértices de forma interactiva.</div>
+                        <div class="acciones">
+                            <a href="#detalle-poliedros" class="btn fantasma">Ver proyecto Poliedros</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="seccion-detalles">
+            
+            <div id="detalle-parejas" class="proyecto-detalle">
+                <div class="caja-imagen">
+                    <img src="/images/ParejasVertical.jpg" alt="Vista superior del tablero del Juego de Parejas mostrando tapones boca abajo y boca arriba con símbolos de sumas y restas">
+                </div>
+                <div class="info-detalle">
+                    <h3>Juego de Parejas (Memory)</h3>
+                    <h4>¿Cómo se ha creado?</h4>
+                    <p>Este proyecto sigue una filosofía de reciclaje y sostenibilidad. Se han utilizado tapones de plástico de botellas. En el interior de cada tapón se han dibujado o pegado pegatinas con distintos símbolos matemáticos.</p>
+                    <h4>¿Cómo se juega?</h4>
+                    <p>Por turnos, cada participante levanta dos tapones. Si coinciden los símbolos, se los queda; si no, los vuelve a tapar en la misma posición. Gana quien consiga agrupar más parejas.</p>
+                </div>
+            </div>
+
+            <div id="detalle-tangram" class="proyecto-detalle">
+                <div class="caja-imagen">
+                    <img src="/images/Tangram.jpg" alt="Siete piezas geométricas del Tangram (triángulos de distintos tamaños, un cuadrado y un paralelogramo) formando la silueta de una casa">
+                </div>
+                <div class="info-detalle">
+                    <h3>Tangram Geométrico</h3>
+                    <h4>¿Cómo se ha creado?</h4>
+                    <p>Construido a partir de un cuadrado rígido (cartón o madera) dividido mediante trazos geométricos precisos en 7 piezas: 5 triángulos, 1 cuadrado y 1 paralelogramo.</p>
+                    <h4>¿Cómo se juega?</h4>
+                    <p>Se deben formar figuras usando siempre las 7 piezas planas sin superponerlas en ningún momento. Desarrolla la percepción espacial y la comprensión de áreas equivalentes.</p>
+                </div>
+            </div>
+
+            <div id="detalle-tresenraya" class="proyecto-detalle">
+                <div class="caja-imagen">
+                    <img src="/images/TresEnRaya.jpg" alt="Tablero de Tres en Raya dibujado sobre madera, con piedras redondeadas pintadas con mariquitas y formas abstractas como fichas">
+                </div>
+                <div class="info-detalle">
+                    <h3>Tres en Raya Natural</h3>
+                    <h4>¿Cómo se ha creado?</h4>
+                    <p>Elaborado con materiales naturales: piedras de río pintadas a mano para diferenciarlas por equipos y una base de madera o cartón marcando la cuadrícula de 3x3.</p>
+                    <h4>¿Cómo se juega?</h4>
+                    <p>Dos personas colocan sus fichas por turnos. Quien logre alinear primero tres de sus fichas (en horizontal, vertical o diagonal) gana la partida.</p>
+                </div>
+            </div>
+
+            <div id="detalle-ubongo" class="proyecto-detalle">
+                <div class="caja-imagen">
+                    <img src="/images/Ubongo.jpg" alt="Tablero de Ubongo de cartón mostrando una silueta blanca vacía y varias piezas geométricas de colores esparcidas alrededor listas para encajar">
+                </div>
+                <div class="info-detalle">
+                    <h3>Tableros Estilo Ubongo</h3>
+                    <h4>¿Cómo se ha creado?</h4>
+                    <p>Piezas tipo "poliominó" (bloques formados por cuadrados unidos) recortadas en cartón y plantillas con desafíos geométricos diseñadas por el alumnado.</p>
+                    <h4>¿Cómo se juega?</h4>
+                    <p>Es un reto de lógica contrarreloj. Quien participa debe encajar sus piezas asignadas exactamente en el área blanca de su plantilla antes que el resto de personas.</p>
+                </div>
+            </div>
+
+            <div id="detalle-peonzas" class="proyecto-detalle">
+                <div class="caja-imagen">
+                    <img src="/images/VideoPeonzas.gif" alt="Animación corta mostrando cómo una peonza hecha de papel con pliegues simétricos gira velozmente sobre una mesa">
+                </div>
+                <div class="info-detalle">
+                    <h3>Juego de Peonzas de Papel</h3>
+                    <h4>¿Cómo se ha creado?</h4>
+                    <p>Utilizando únicamente las técnicas del origami, con un simple folio de papel doblado de tal manera que forme la estructura equilibrada de la peonza.</p>
+                    <h4>¿Cómo se juega?</h4>
+                    <p>Se juega como toda la vida, aplicando fuerza de torsión. Agarras el eje superior de la peonza con los dedos y la haces girar para observar su momento angular y equilibrio.</p>
+                </div>
+            </div>
+
+            <div id="detalle-poliedros" class="proyecto-detalle">
+                <div class="caja-imagen">
+                    <img src="/images/VideoPoliedros.gif" alt="Animación de una red plana de triángulos de papel que, al tirar de un hilo central, se eleva y ensambla formando un icosaedro tridimensional">
+                </div>
+                <div class="info-detalle">
+                    <h3>Juego de Poliedros</h3>
+                    <h4>¿Cómo se ha creado?</h4>
+                    <p>A partir del desarrollo plano de una figura geométrica en papel o cartulina, enhebrando un cordel a través de sus vértices estratégicos.</p>
+                    <h4>¿Cómo se juega?</h4>
+                    <p>El poliedro tiene un sistema de cuerdas. A medida que tiras suavemente de ellas, la figura bidimensional se repliega sobre sí misma cerrando sus caras y formando un cuerpo tridimensional.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="minijuegos" class="seccion-principal fondo-alternativo">
+            <h2 class="titulo-seccion">Minijuegos Digitales</h2>
+            <p class="subtitulo-seccion">Aprende jugando con nuestras versiones interactivas.</p>
+            
+            <div class="contenedor-juegos">
+                <div class="tarjeta-juego">
+                    <div class="imagen" style="background-image: url('/images/MiniaturaParejas.jpg')" role="img" aria-label="Previsualización del minijuego de cartas digital"></div>
+                    <div class="contenido">
+                        <div class="titulo">Juego de Parejas (Memory)</div>
+                        <div class="descripcion">Pon a prueba tu agilidad mental y memoria resolviendo las parejas de símbolos matemáticos.</div>
+                        <div class="acciones">
+                            <button class="btn" onclick="window.location.href='/juegos/Cartas.html'">Jugar ahora</button>
+                            <button class="btn fantasma" onclick="window.location.href='reglas.html'">Reglas</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="tarjeta-juego">
+                    <div class="imagen" style="background-image: url('/images/MiniaturaTresEnRaya.jpg')" role="img" aria-label="Previsualización del minijuego del tres en raya digital"></div>
+                    <div class="contenido">
+                        <div class="titulo">Tres en Raya Digital</div>
+                        <div class="descripcion">Reta a tus amistades y diviértete con este entretenido minijuego clásico de alineación.</div>
+                        <div class="acciones">
+                            <button class="btn" onclick="window.location.href='/juegos/tresenraya.html'">Jugar ahora</button>
+                            <button class="btn fantasma" onclick="window.location.href='reglas.html'">Reglas</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="tarjeta-juego">
+                    <div class="imagen" style="background-image: url('/images/MiniaturaUgonbo.jpg')" role="img" aria-label="Previsualización del minijuego Ubongo digital"></div>
+                    <div class="contenido">
+                        <div class="titulo">Ubongo Challenge</div>
+                        <div class="descripcion">Supera los distintos niveles encajando perfectamente los poliominós en la cuadrícula blanca.</div>
+                        <div class="acciones">
+                            <button class="btn" onclick="window.location.href='/juegos/Ubongo.html'">Jugar ahora</button>
+                            <button class="btn fantasma" onclick="window.location.href='reglas.html'">Reglas</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="visitanos" class="seccion-principal">
+            <h2 class="titulo-seccion">Cuándo visitarnos</h2>
+            <p class="subtitulo-seccion">Consulta nuestros eventos y horarios de exposición.</p>
+            
+            <div class="proyecto-detalle" style="flex-direction: column; text-align: center;">
+                <div class="info-detalle" style="flex: 1 1 100%;">
+                    <h3>Gran Jornada de Puertas Abiertas</h3>
+                    <p style="font-size: 1.15rem;">
+                        El viernes <strong>27/02/2026</strong> en el <strong>Aula A1</strong> estarán disponibles estos juegos para 
+                        que la comunidad educativa y visitantes puedan probar los prototipos físicos, resolver los retos del 
+                        Tangram y competir en el torneo de Tres en Raya Natural organizado por nuestro departamento.
+                    </p>
+                    <p style="margin-top: 15px; color: var(--color-acento);">
+                        Horario: 10:05h a 14:15h. ¡Os esperamos!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div id="nosotros" class="pie-de-pagina">
+            <h2>Nosotros</h2>
+            <p>Grupo 4 Del Proyecto 28: "Web" Junto a Proyecto 4: "Juegos Matemáticos".</p>
+        </div>
+
+    </body>
+</html>
